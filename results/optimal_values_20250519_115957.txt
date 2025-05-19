@@ -1,5 +1,0 @@
-Nilai Optimal 'a' untuk tiap Ramp (Target SF = 1.25)
-==================================================
-Ramp 1: a = 27.27, Prediksi SF = 2.5948
-Ramp 2: a = 27.27, Prediksi SF = 2.5948
-Ramp 3: a = 27.27, Prediksi SF = 2.5948
