@@ -3,9 +3,9 @@ import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from preprocesing_data import load_data, get_ramp_data, check_constant_parameters, prepare_training_data
+from preprocesing_data import load_data, get_ramp_data, prepare_training_data
 from train import Model_ANN, train_model, predict_sf, find_optimal_a
-from visualization import setup_plots, plot_predictions, plot_training_history, save_plot, display_plot
+from visualization import setup_plots, plot_predictions, plot_training_history, save_plot, display_plot, plot_combined_predictions
 
 def main():
     results_dir = f"results"
@@ -28,6 +28,7 @@ def main():
     plt_obj = setup_plots(num_ramps)
     
     optimal_values = {}
+    all_predictions = {}
     
     for i, ramp_id in enumerate(ramp_groups):
         print(f"\n{'='*50}")
@@ -35,12 +36,6 @@ def main():
         print(f"{'='*50}")
         
         ramp_data = get_ramp_data(df, ramp_id)
-        
-        constant_params = check_constant_parameters(ramp_data)
-        print("\nParameter analysis:")
-        for param, info in constant_params.items():
-            status = "Constant" if info['is_constant'] else "Variable"
-            print(f"  - {param}: {status} - Values: {info['values']}")
         
         print("\nPreparing training data...")
         X_train, X_val, y_train, y_val, scaler_X, scaler_y, a_min, a_max = prepare_training_data(ramp_data)
@@ -54,6 +49,7 @@ def main():
         
         print("\nMaking predictions...")
         sf_predictions = predict_sf(model, a_range_scaled, scaler_y)
+        all_predictions[ramp_id] = (a_range, sf_predictions)
         
         target_sf = 1.25
         optimal_a, predicted_sf = find_optimal_a(a_range, sf_predictions, target_sf)
@@ -71,11 +67,11 @@ def main():
         
         plot_training_history(plt_obj, history, ramp_id, (num_ramps, 2, 2*i+2))
         
-        model_path = os.path.join(results_dir, f"model_ramp_{ramp_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.h5")
+        model_path = os.path.join(results_dir, f"model_ramp_{ramp_id}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.h5")
         model.save(model_path)
         print(f"Model saved to {model_path}")
     
-    plot_path = os.path.join(results_dir, f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+    plot_path = os.path.join(results_dir, f"results_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png")
     save_plot(plt_obj, plot_path)
     print(f"\nPlot disimpan di {plot_path}")
     
@@ -85,7 +81,9 @@ def main():
     for ramp_id, values in optimal_values.items():
         print(f"Ramp {ramp_id}: a = {values['optimal_a']:.2f}, Predicted SF = {values['predicted_sf']:.4f}")
     
-    results_path = os.path.join(results_dir, f"optimal_values_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt")
+    results_path = os.path.join(results_dir, f"optimal_values_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt")
+    combined_plot_path = os.path.join(results_dir, f"combined_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png")
+    
     with open(results_path, 'w') as f:
         f.write(f"Nilai Optimal 'a' untuk tiap Ramp (Target SF = {target_sf})\n")
         f.write("="*50 + "\n")
@@ -95,5 +93,7 @@ def main():
     
     display_plot(plt_obj)
 
+    plot_combined_predictions(all_predictions, target_sf, combined_plot_path)
+    
 if __name__ == "__main__":
     main()

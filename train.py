@@ -1,9 +1,15 @@
-# model.py
-# Modul yang berisi definisi dan fungsi-fungsi untuk model ANN
-
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import tensorflow.keras.backend as K
+
+def rmse(y_true, y_pred):
+    return K.sqrt(K.mean(K.square(y_pred - y_true)))
+
+def r_squared(y_true, y_pred):
+    ss_res = K.sum(K.square(y_true - y_pred))
+    ss_tot = K.sum(K.square(y_true - K.mean(y_true)))
+    return 1 - ss_res / (ss_tot + K.epsilon())
 
 def Model_ANN(input_shape):
     model = keras.Sequential([
@@ -16,7 +22,7 @@ def Model_ANN(input_shape):
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
         loss='mse',
-        metrics=['mae']
+        metrics=['mae', 'mape', rmse, r_squared]
     )
     
     return model

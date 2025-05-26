@@ -1,20 +1,11 @@
-# visualization.py
-# Modul untuk visualisasi hasil pelatihan dan prediksi
-
 import matplotlib.pyplot as plt
 import numpy as np
 
 def setup_plots(num_ramps):
-    """
-    Menyiapkan figure dan subplots
-    """
     plt.figure(figsize=(15, 5 * num_ramps))
     return plt
 
 def plot_predictions(plt_obj, ramp_id, subplot_idx, ramp_data, a_range, sf_predictions, target_sf=4.25):
-    """
-    Plot data aktual, prediksi, dan target SF
-    """
     plt_obj.subplot(subplot_idx[0], subplot_idx[1], subplot_idx[2])
     plt_obj.scatter(ramp_data['a'], ramp_data['SF'], label=f'Data Aktual (Ramp {ramp_id})')
     plt_obj.plot(a_range, sf_predictions, 'r-', label='Prediksi ANN')
@@ -26,9 +17,6 @@ def plot_predictions(plt_obj, ramp_id, subplot_idx, ramp_data, a_range, sf_predi
     plt_obj.grid(True)
 
 def plot_training_history(plt_obj, history, ramp_id, subplot_idx):
-    """
-    Plot history pelatihan model
-    """
     plt_obj.subplot(subplot_idx[0], subplot_idx[1], subplot_idx[2])
     plt_obj.plot(history.history['loss'], label='Training Loss')
     plt_obj.plot(history.history['mae'], label='Training MAE')
@@ -42,16 +30,30 @@ def plot_training_history(plt_obj, history, ramp_id, subplot_idx):
     plt_obj.grid(True)
 
 def save_plot(plt_obj, filename='sf_prediction_results.png'):
-    """
-    Menyimpan plot ke file
-    """
     plt_obj.tight_layout()
     plt_obj.savefig(filename)
     return filename
 
 def display_plot(plt_obj):
-    """
-    Menampilkan plot
-    """
     plt_obj.tight_layout()
     plt_obj.show()
+    plt_obj.close()  # Close the plot to free memory
+    
+def plot_combined_predictions(all_predictions, target_sf=1.25, filename='combined_predictions.png'):
+    plt.figure(figsize=(10, 6))
+    
+    for ramp_id, (a_range, sf_pred) in all_predictions.items():
+        plt.plot(a_range, sf_pred, label=f'Ramp {ramp_id}')
+    
+    plt.axhline(y=target_sf, color='g', linestyle='--', label=f'Target SF={target_sf}')
+    plt.xlabel('Parameter a')
+    plt.ylabel('Safety Factor (SF)')
+    plt.title('Gabungan Prediksi ANN: a vs SF')
+    plt.legend()
+    plt.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig(filename)
+    print(f"Plot gabungan disimpan di {filename}")
+    plt.show()
+    plt.close()  # Close the plot to free memory
