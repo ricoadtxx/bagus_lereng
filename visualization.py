@@ -37,7 +37,7 @@ def save_plot(plt_obj, filename='sf_prediction_results.png'):
 def display_plot(plt_obj):
     plt_obj.tight_layout()
     plt_obj.show()
-    plt_obj.close()  # Close the plot to free memory
+    plt_obj.close()
     
 def plot_combined_predictions(all_predictions, target_sf=1.25, filename='combined_predictions.png'):
     plt.figure(figsize=(10, 6))
@@ -56,4 +56,4 @@ def plot_combined_predictions(all_predictions, target_sf=1.25, filename='combine
     plt.savefig(filename)
     print(f"Plot gabungan disimpan di {filename}")
     plt.show()
-    plt.close()  # Close the plot to free memory
+    plt.close()
