@@ -22,12 +22,12 @@ def Model_ANN(input_shape):
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
         loss='mse',
-        metrics=['mae', 'mape', rmse, r_squared]
+        metrics=['mae', rmse, r_squared]
     )
     
     return model
 
-def train_model(model, X_train, y_train, X_val=None, y_val=None, epochs=300):
+def train_model(model, X_train, y_train, X_val=None, y_val=None, epochs=100):
     if X_val is not None and y_val is not None:
         history = model.fit(
             X_train, y_train,
@@ -49,7 +49,7 @@ def predict_sf(model, a_values_scaled, scaler_y):
     sf_predictions = scaler_y.inverse_transform(sf_pred_scaled).flatten()
     return sf_predictions
 
-def find_optimal_a(a_range, sf_predictions, target_sf=4.25):
+def find_optimal_a(a_range, sf_predictions, target_sf=1.25):
     closest_idx = abs(sf_predictions - target_sf).argmin()
     optimal_a = a_range[closest_idx]
     predicted_sf = sf_predictions[closest_idx]

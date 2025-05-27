@@ -24,8 +24,14 @@ def prepare_training_data(ramp_data):
     X_scaled = scaler_X.fit_transform(X)
     y_scaled = scaler_y.fit_transform(y.values.reshape(-1, 1)).flatten()
     
-    X_train, X_val, y_train, y_val = train_test_split(
-        X_scaled, y_scaled, test_size=0.2, random_state=42
+    # Split train + temp (val + test)
+    X_train, X_temp, y_train, y_temp = train_test_split(
+        X_scaled, y_scaled, test_size=0.4, random_state=42
     )
     
-    return X_train, X_val, y_train, y_val, scaler_X, scaler_y, X['a'].min(), X['a'].max()
+    # Split temp into validation and test
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_temp, y_temp, test_size=0.5, random_state=42
+    )
+    
+    return X_train, X_val, X_test, y_train, y_val, y_test, scaler_X, scaler_y, X['a'].min(), X['a'].max()

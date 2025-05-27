@@ -57,3 +57,14 @@ def plot_combined_predictions(all_predictions, target_sf=1.25, filename='combine
     print(f"Plot gabungan disimpan di {filename}")
     plt.show()
     plt.close()
+    
+def plot_actual_vs_predicted(plt_obj, y_true, y_pred, ramp_id, subplot_idx):
+    plt_obj.subplot(subplot_idx[0], subplot_idx[1], subplot_idx[2])
+    plt_obj.scatter(y_true, y_pred, color='blue', label='Prediksi vs Aktual')
+    plt_obj.plot([min(y_true), max(y_true)], [min(y_true), max(y_true)], 'r--', label='Ideal (y = x)')
+    plt_obj.xlabel('SF Aktual')
+    plt_obj.ylabel('SF Prediksi')
+    plt_obj.title(f'Ramp {ramp_id}: SF Aktual vs Prediksi')
+    plt_obj.legend()
+    plt_obj.grid(True)
+

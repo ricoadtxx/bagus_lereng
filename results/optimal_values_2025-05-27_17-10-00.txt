@@ -1,0 +1,30 @@
+Nilai Optimal 'a' untuk tiap Ramp (Target SF = 1.25)
+==================================================
+
+Ramp 1:
+  a optimal     = 46.25
+  Prediksi SF   = 1.2501
+  Hasil Evaluasi Test Set:
+    loss: 0.0009
+    mae: 0.0261
+    rmse: 0.0297
+    r_squared: 0.9868
+
+Ramp 2:
+  a optimal     = 50.00
+  Prediksi SF   = 1.6914
+  Hasil Evaluasi Test Set:
+    loss: 0.0027
+    mae: 0.0441
+    rmse: 0.0516
+    r_squared: 0.9471
+
+Ramp 3:
+  a optimal     = 50.00
+  Prediksi SF   = 3.3711
+  Hasil Evaluasi Test Set:
+    loss: 0.0026
+    mae: 0.0463
+    rmse: 0.0510
+    r_squared: 0.9753
+
